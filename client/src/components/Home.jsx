@@ -1,8 +1,20 @@
 import React, {useState, useEffect} from 'react';
 
-const Home = () => {
+const baseURL = 'http://localhost:3003';
+
+function Home(){
 
     const [ruleSearch, setRuleSearch] = useState('');
+    const [allRules, setAllRules] = useState([]);
+
+    useEffect(() => {
+        fetch(baseURL+'/populateRules')
+            .then(res => res.json())
+            .then(resJson => {
+                console.log(resJson.data.results);
+                setAllRules(resJson.data.results);
+            });
+    }, [])
 
     return(
         <div className='homepage columns'>
@@ -14,7 +26,12 @@ const Home = () => {
                     </div>
                 </div>
                 <div className='searchRules'>
-
+                    <form>
+                        <input type='text' name='ruleSearch' value={ ruleSearch } onChange = { setRuleSearch } />
+                    </form>
+                    { allRules.map((item, key) => {
+                        return(<p className = 'ruleItem'>{ item.name }</p>);
+                    })}
                 </div>
             </div>
 
